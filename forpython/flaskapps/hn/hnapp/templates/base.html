@@ -1,0 +1,46 @@
+<!doctype html>
+<title>{% block title %} {% endblock %} - Hnapp </title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></link>
+<center>
+<nav style="height: 20px; padding: 2px;">
+  <h1>Hacker News</h1>
+  <ul>
+    {% if g.user %}
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">welcome</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.new') }}">new</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">threads</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">past</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">comments</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">ask</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">show</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">jobs</a></li>
+    <li style="align-self: center">|</li>
+    <li><a class="action" href="{{ url_for('hnpost.create') }}">submit</a></li>
+    <li style="align-self: center">|</li>
+    
+    <li><span>{{ g.user['username'] }}</span></li>
+    <li style="align-self: center">|</li>
+    <li><a href="{{ url_for('auth.logout') }}">logout</a></li>
+    {% else %}
+    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+    {% endif %}
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %} {% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>
+</center>

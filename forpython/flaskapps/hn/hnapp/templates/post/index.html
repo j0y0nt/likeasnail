@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table width="100%%" bgcolor="#f6f6ef" cellspacing="0" cellpadding="0">
+  <tr style="height: 10px;"> </tr>
+  {% for post in posts %}
+  <tr>
+    <td class="title" style="width:12px; padding-left: 10px;">{{loop.index}}.</td>
+    <td class="votelinks" valign="top"  style="width:15px;">
+	<a id="up_34367083"
+	   class="clicky"
+	   href="{{url_for('hnpost.vote',id=post['id']) }}">
+	  <div class="votearrow" title="upvote"></div>
+	</a>
+    </td>
+    <td class="title">
+      <a href="{{ post['url'] }}"> {{ post['title'] }}</a>
+      {% if post['url'] %}
+      ({{ urlparse(post['url']).netloc }})
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2"></td>
+    <td class="subtext">
+      {{ post['points'] }} points by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }} | hide | 38 comments
+    </td>
+  </tr>
+  <tr style="height:5px;"></tr>
+  <!--article class="post">
+      
+      {% if g.user['id'] == post['user_id'] %}
+      <a class="action" href="{{ url_for('hnpost.update', id=post['id']) }}">Edit</a>
+      {% endif %}
+      <!--p class="body">{{ post['body'] }}</p>
+	  </article-->
+
+{% endfor %}
+</table>
+{% endblock %}

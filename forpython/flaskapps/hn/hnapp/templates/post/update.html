@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ post['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <table>
+      <tr>
+	<td><label for="title">Title</label></td>
+	<td><input name="title" id="title" size="50"
+		   value="{{ request.form['title'] or post['title'] }}" required></td>
+      </tr>
+      <tr>
+	<td><label for="url">URL</label></td>
+	<td><input name="url" id="url" size="50"
+		   value="{{ request.form['url'] or post['url'] }}" ></td>
+      </tr>
+      <tr>
+	<td><label for="body">Text</label></td>
+	<td>
+	  <textarea name="body" id="body" rows="8" cols="80">
+	    {{ request.form['body'] or post['body'] }}
+	  </textarea>
+	</td>
+      </tr>
+      <tr>
+	<td></td>
+	<td><input type="submit" value="Submit"></td>
+      </tr>
+    </table>
+  </form>
+  <hr>
+  <form action="{{ url_for('hnpost.delete', id=post['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}

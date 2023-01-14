@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="height:10"> &nbsp;</div>
+<table width="100%%" bgcolor="#f6f6ef" cellspacing="0" cellpadding="0">
+  {% for post in posts %}
+  <tr>
+    <td class="title"> {{loop.index}} </td>
+    <td>  </td>
+    <td class="title"> <a hre="{{ post['url'] }}"> {{ post['title'] }}</a></td>
+  </tr>
+  <tr>
+    <td colspan="2"></td>
+    <td class="subtext">
+      {{ post['points'] }} points by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }} | hide | 38 comments
+    </td>
+  </tr>
+{% endfor %}
+</table>
+{% endblock %}
