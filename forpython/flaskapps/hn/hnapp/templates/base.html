@@ -25,7 +25,9 @@
     <li><a class="action" href="{{ url_for('hnpost.create') }}">submit</a></li>
     <li style="align-self: center">|</li>
     
-    <li><span>{{ g.user['username'] }}</span></li>
+    <li>
+	<a class="action" href="{{ url_for('hnpost.user', id=g.user['username']) }}">{{g.user['username']}}</a>
+    </li>
     <li style="align-self: center">|</li>
     <li><a href="{{ url_for('auth.logout') }}">logout</a></li>
     {% else %}
