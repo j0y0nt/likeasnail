@@ -20,6 +20,22 @@ def index():
     ).fetchall()
     return render_template('post/index.html', posts=posts, urlparse=urlparse)
 
+def format_date(datestr):
+    dt = datetime.fromisoformat(datestr) #datetime.strptime(datestr, '%y-%m-%d %H:%M:%S')
+    return dt.strftime('%B %d, %Y')
+
+@bp.route('/user', methods=['GET'])
+def user():
+    if request.method == 'GET':
+        username = request.args.get('id', '')
+        print(id)
+        db = get_db()
+        user = db.execute(
+            'SELECT id, username, email, created_at, about, karma from huser where username = ?',
+            (username,)
+        ).fetchone()
+        return render_template('user/profile.html', huser = user, dateformatter=format_date)
+
 
 @bp.route('/new', methods=['GET'])
 def new():

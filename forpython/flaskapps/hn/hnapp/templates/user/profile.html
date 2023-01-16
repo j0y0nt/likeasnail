@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table border="0">
+    <tbody>
+        <tr class="athing">
+            <td valign="top">user:</td>
+            <td timestamp="1271286713"><a href="user?id=comex" class="hnuser">{{ huser.username }}</a></td>
+        </tr>
+        <tr>
+            <td valign="top">created:</td>
+            <td><a href="front?day=2010-04-14&amp;birth=comex">
+		{{ dateformatter(huser['created_at']) }} </a></td>
+        </tr>
+        <tr>
+            <td valign="top">karma:</td>
+            <td>{{ huser.karma }} </td>
+        </tr>
+        <tr>
+            <td valign="top" width="3%">about:</td>
+            <td style="overflow:hidden">
+                <p></p>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a href="submitted?id=comex"><u>submissions</u></a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a href="threads?id=comex"><u>comments</u></a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a href="favorites?id=comex"><u>favorites</u></a></td>
+        </tr>
+    </tbody>
+</table><br><br>
+{% endblock %}
