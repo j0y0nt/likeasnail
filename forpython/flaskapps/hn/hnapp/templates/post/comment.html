@@ -28,7 +28,7 @@
 	<td colspan="2"></td>
 	<td class="subtext">
 	  <span class="subline">
-            <span class="score" id="score_34397436">{{ post['points'] }} points</span>
+            <span class="score" id="score_34397436">{{ post['points'] or 0 }} points</span>
 	    by
 	    <a href="{{ url_for('hnpost.user',id=post['username']) }}" class="hnuser">{{ post['username'] }}</a>
 	    <span class="age" title="2023-01-16T06:14:31">
