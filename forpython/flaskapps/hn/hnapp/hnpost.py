@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 from hnapp.auth import login_required
 from hnapp.db import get_db
 from urllib.parse import urlparse
+from datetime import *
 
 bp = Blueprint('hnpost', __name__)
 
@@ -13,7 +14,7 @@ bp = Blueprint('hnpost', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points, p.created, u.username'
+        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points, p.created, p.comment_count, u.username'
         ' FROM post p JOIN huser u ON p.user_id = u.id'
         ' ORDER BY p.points DESC'
     ).fetchall()
@@ -114,6 +115,77 @@ def update(id):
             return redirect(url_for('hnpost.index'))
 
     return render_template('post/update.html', post=post)
+
+def get_comments(post_id):
+    comments = get_db().execute(
+        'SELECT id, body, created, points, post_id, parent_id, user_id, username'
+        ' FROM comment c'
+        ' WHERE c.post_id = ?',
+        (post_id,)
+    ).fetchall()
+
+    if comments is None:
+        comments = []
+        
+    return comments    
+
+def show_nice_duration(d_time):
+    delta = datetime.now() - d_time
+    print(delta.days)
+    
+    if delta.days != 0:
+        return f"{delta.days} days ago"
+    elif delta.seconds is not None and delta.seconds >= 3600:
+        return f"{int(delta.seconds / 3600)} hour ago"
+    elif delta.seconds is not None and delta.seconds >= 60:
+        return f"{int(delta.seconds / 60)} minutes ago"
+    elif delta.seconds != 0:
+        return f"{delta.seconds} second ago"
+
+    return d_time
+    
+@bp.route("/item/<int:id>", methods=('GET',))
+def get_item(id):
+    post = get_post(id, check_author=False)
+    comments = get_comments(id)
+    return render_template('post/comment.html', post=post, comments=comments,
+                           urlparse=urlparse, dtformatter=show_nice_duration)
+
+
+@bp.route("/comment/<int:id>", methods=('POST',))
+@login_required
+def add_comment(id):
+    if request.method == 'POST':
+        text = request.form['text']
+        parent = request.form['parent']
+        error = None
+        print(type(id))
+        
+        if not text:
+            error = 'Comment is required.'
+
+        if not parent:
+            error = 'Post ID is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute('INSERT INTO comment '
+                       '(body, post_id, parent_id, user_id, username) '
+                       'VALUES (?, ?, ?, ?, ?) ',
+                       (text, id, int(parent), int(g.user['id']), g.user['username'])
+            )
+            db.execute('UPDATE post SET comment_count = comment_count + 1'
+                       ' WHERE id = ?',
+                       (id,)
+            )
+            db.commit()
+            
+            return redirect(url_for('hnpost.get_item',id=parent))
+
+    post = get_post(id, check_author=False)    
+    return render_template('post/comment.html', post=post, urlparse=urlparse)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required

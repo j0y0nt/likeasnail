@@ -3,6 +3,7 @@ body {
     //max-width: 960px;
    // margin: 0 auto;
    // background: white;
+   background-color: #f6f6ef;
 }
 
 h1 {
@@ -54,6 +55,10 @@ nav ul li a, nav ul li span, header .action {
     //flex-direction: column;
 }
 //.content label { font-weight: bold; margin-bottom: 0.5em; }
+
+table {
+    width: 100%;
+}
 
 td {
     font-family:Verdana, Geneva, sans-serif;
@@ -110,4 +115,12 @@ input[type=submit] {
 
 .votelinks.nosee div.votearrow.rotate180 {
   display: none;
+}
+
+.comment {
+    max-width: 1215px;
+    overflow-wrap: anywhere;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 9pt;
+    color: #000000;
 }

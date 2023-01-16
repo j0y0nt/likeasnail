@@ -24,7 +24,7 @@
   <tr>
     <td colspan="2"></td>
     <td class="subtext">
-      {{ post['points'] }} points by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }} | hide | 38 comments
+      {{ post['points'] }} points by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }} | hide | <a href="{{ url_for('hnpost.get_item',id=post['id']) }}">{{ post['comment_count'] }} comments</a>
     </td>
   </tr>
   <tr style="height:5px;"></tr>

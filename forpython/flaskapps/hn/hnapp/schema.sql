@@ -33,3 +33,5 @@ CREATE TABLE IF NOT EXISTS comment(
   FOREIGN KEY (user_id) REFERENCES huser (id),
   FOREIGN KEY (post_id) REFERENCES post (id)
 );
+
+ALTER TABLE post ADD COLUMN comment_count INTEGER DEFAULT 0;
