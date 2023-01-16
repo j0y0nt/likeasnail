@@ -32,6 +32,7 @@ def new():
 
 
 @bp.route('/vote/<int:id>', methods=['GET'])
+@login_required
 def vote(id):
     print(id)
     db = get_db()
