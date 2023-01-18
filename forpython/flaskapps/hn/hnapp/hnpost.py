@@ -1,3 +1,4 @@
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -20,9 +21,12 @@ def index():
     ).fetchall()
     return render_template('post/index.html', posts=posts, urlparse=urlparse)
 
+
 def format_date(datestr):
-    dt = datetime.fromisoformat(datestr) #datetime.strptime(datestr, '%y-%m-%d %H:%M:%S')
+    #datetime.strptime(datestr, '%y-%m-%d %H:%M:%S')
+    dt = datetime.fromisoformat(datestr)
     return dt.strftime('%B %d, %Y')
+
 
 @bp.route('/user', methods=['GET'])
 def user():
@@ -164,8 +168,36 @@ def show_nice_duration(d_time):
 def get_item(id):
     post = get_post(id, check_author=False)
     comments = get_comments(id)
-    return render_template('post/comment.html', post=post, comments=comments,
-                           urlparse=urlparse, dtformatter=show_nice_duration)
+    return render_template('post/comment.html',
+                           post=post,
+                           comments=comments,
+                           urlparse=urlparse,
+                           dtformatter=show_nice_duration)
+
+
+def get_comment(comment_id):
+    comment = get_db().execute(
+        'SELECT id, body, created, points, post_id, parent_id, user_id, username'
+        ' FROM comment c'
+        ' WHERE c.id = ?',
+        (int(comment_id),)
+    ).fetchone()
+        
+    return comment
+
+
+@bp.route("/reply", methods=('GET',))
+def reply():
+    if request.method == 'GET':
+        post_id = request.args.get('item', '')
+        comment_id = request.args.get('id', '')
+        post = get_post(post_id, check_author=False)
+        comment = get_comment(comment_id)
+    return render_template('post/reply.html',
+                           post=post,
+                           comment=comment,
+                           urlparse=urlparse,
+                           dtformatter=show_nice_duration)
 
 
 @bp.route("/comment/<int:id>", methods=('POST',))

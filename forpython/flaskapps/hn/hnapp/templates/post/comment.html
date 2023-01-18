@@ -50,6 +50,8 @@
       <tr>
 	<td colspan="2"></td>
 	<td>
+	  {% include "post/reply.html" %}
+	  <!--
 	  <form action="{{ url_for('hnpost.add_comment', id=post['id']) }}" method="post">
 	    <input type="hidden" name="parent" value="{{ post['id'] }}">
 	    <input type="hidden" name="goto" value="item?id=34397436">
@@ -70,6 +72,7 @@
 	    <br>
 	    <input type="submit" value="add comment">
 	  </form>
+-->
 	</td>
       </tr>
     </tbody>
@@ -109,7 +112,8 @@
 	<div class="reply">
           <p>
 	    <font size="1">
-              <u><a href="reply?id=34391449&amp;goto=item%3Fid%3D34390585%2334391449">reply</a></u>
+	      <!-- reply?id=34423662&goto=item%3Fid%3D34414716%2334423662 http://localhost:5000/reply/?id=1&item=4 -->
+              <u><a href="{{ url_for('hnpost.reply',id=comment['id'], item=post['id']) }}">reply</a></u>
             </font>
 	  </p>
 	</div>

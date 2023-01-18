@@ -2,6 +2,7 @@
 <title>{% block title %} {% endblock %} - Hnapp </title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></link>
 <center>
+  <div style="width:85%; background-color: #f6f6ef">
 <nav style="height: 20px; padding: 2px;">
   <h1><a href="/">Hacker News</a></h1>
   <ul>
@@ -45,4 +46,5 @@
   {% endfor %}
   {% block content %}{% endblock %}
 </section>
+</div>
 </center>

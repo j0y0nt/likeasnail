@@ -1,0 +1,128 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></link>
+
+{% block content %}
+{% if comment %}
+<center>
+  <div style="width: 85%;">
+    {% endif %}
+<table id="hnmain" border="0" cellpadding="0" cellspacing="0" width="85%" bgcolor="#f6f6ef">
+  <tbody>
+     {% if comment %}
+        <tr>
+            <td bgcolor="#ff6600">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px">
+                    <tbody>
+                        <tr>
+                            <td style="width:18px;padding-right:4px">
+                              <a href="https://news.ycombinator.com">
+				<img src="{{ url_for('static', filename='y18.gif') }}"
+				     width="18" height="18"
+				     style="border:1px white solid;">
+			      </a>
+                            </td>
+                            <td style="line-height:12pt; height:10px;"><span class="pagetop"><b>Add Comment</b></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr id="pagespace" title="Add Comment" style="height:10px"></tr>
+        <tr>
+            <td></td>
+        </tr>
+	{% endif %}
+        <tr>
+            <td>
+                <table class="fatitem" border="0">
+                  <tbody>
+		    {% if comment %}
+                        <tr class="athing" id="34423662">
+                            <td class="ind"></td>
+                            <td valign="top" class="votelinks">
+                                <center>
+                                    <a id="up_34423662" class="clicky" href="vote?id=34423662&amp;how=up&amp;auth=c34c1650566834c899aa574a0a0367e77c2861e2&amp;goto=reply%3Fid%3D34423662%26goto%3Ditem%253Fid%253D34414716%252334423662#34423662">
+                                        <div class="votearrow" title="upvote"></div>
+                                    </a>
+                                </center>
+                            </td>
+			    
+                            <td class="default">
+                              <div style="margin-top:2px; margin-bottom:-10px;">
+				<span class="comhead">
+				  <a href="user?id=ultrasounder" class="hnuser">
+				    {{ comment['username'] }}
+				  </a>
+				  <span class="age" title="2023-01-18T05:17:23">
+				    <a href="item?id=34423662">
+				      {{ comment['created'] }}
+				    </a>
+				  </span>
+				  <span id="unv_34423662"></span>
+				  <span class="navs">
+				    |
+				    <a href="item?id=34414716">parent</a>
+				    |
+				    <a href="context?id=34423662" rel="nofollow">
+				      context
+				    </a>
+				    <span class="onstory">
+				      |  on: <a href="item?id=34414716">
+					{{ post['title']|truncate(64) }}...
+				      </a>
+				    </span>
+				  </span>
+                                    </span>
+                                </div><br>
+                                <div class="comment">
+                                  <span class="commtext c00">
+				    {{ comment['body'] }}
+				  </span>
+                                    <div class="reply"></div>
+                                </div>
+                            </td>
+			    
+                        </tr>
+			{% endif %}
+                        <tr style="height:10px"></tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>
+                              <form action="{{ url_for('hnpost.add_comment',
+					    id=post['id']) }}"
+				    method="post">
+				<input type="hidden" name="parent"
+				       value="{{ post['id'] }}">
+				<input type="hidden" name="goto"
+				       value="item?id=34414716#34423662">
+				<input type="hidden" name="hmac"
+				       value="f6538037f6560a5df0877bad4103f2d82f2d75a3">
+				<textarea name="text" rows="8" cols="80"
+					  wrap="virtual" autofocus="true">
+				</textarea>
+				<br>
+				<br>
+				If you haven't already, would you mind reading about HN's
+				<a href="newswelcome.html">
+				  <u>approach to comments</u>
+				</a>
+				and
+				<a href="newsguidelines.html#comments">
+				  <u>site guidelines</u>
+				</a>?
+				<br>
+				<br>
+                                <input type="submit" value="reply">
+			      </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% if comment %}
+</div>
+</center>
+{% endif %}
+{% endblock %}
