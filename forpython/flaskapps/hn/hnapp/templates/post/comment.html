@@ -32,7 +32,7 @@
 	    by
 	    <a href="{{ url_for('hnpost.user',id=post['username']) }}" class="hnuser">{{ post['username'] }}</a>
 	    <span class="age" title="2023-01-16T06:14:31">
-	      <a href="item?id=34397436">20 minutes ago</a>
+	      <a href="item?id=34397436">{{ dtformatter(post['created']) }}</a>
 	    </span>
 	    <span id="unv_34397436"></span>
 	    |

@@ -32,7 +32,6 @@ def format_date(datestr):
 def user():
     if request.method == 'GET':
         username = request.args.get('id', '')
-        print(id)
         db = get_db()
         user = db.execute(
             'SELECT id, username, email, created_at, about, karma from huser where username = ?',
@@ -151,7 +150,6 @@ def get_comments(post_id):
 
 def show_nice_duration(d_time):
     delta = datetime.now() - d_time
-    print(delta.days)
     
     if delta.days != 0:
         return f"{delta.days} days ago"
