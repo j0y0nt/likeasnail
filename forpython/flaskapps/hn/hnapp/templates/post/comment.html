@@ -5,20 +5,30 @@
   <table class="fatitem" border="0">
     <tbody>
       <tr class="athing" id="34397436">
-	<td class="title" valign="top" align="right"><span class="rank"></span></td>
+	<td class="title" valign="top" align="right">
+	  <span class="rank"></span>
+	</td>
 	<td class="votelinks" valign="top">
 	  <center>
-	    <a id="up_34397436" class="clicky" href="{{url_for('hnpost.vote',id=post['id']) }}">
+	    <a id="up_34397436"
+	       class="clicky"
+	       href="{{url_for('hnpost.vote',id=post['id']) }}">
 	      <div class="votearrow" title="upvote"></div>
 	    </a>
 	  </center>
 	</td>
 	<td class="title">
 	  <span class="titleline">
-	    <a href="{{ post['url'] }}" rel="nofollow">{{ post['title'] }}</a>
+	    <a href="{{ post['url'] }}" rel="nofollow">
+	      {{ post['title'] }}
+	    </a>
 	    <span class="sitebit comhead">
 	      {% if post['url'] %}
-	      (<a href="{{ post['url'] }}"><span class="sitestr">{{ urlparse(post['url']).netloc }}</span></a>)
+	      (<a href="{{ post['url'] }}">
+		<span class="sitestr">
+		  {{ urlparse(post['url']).netloc }}
+		</span>
+	      </a>)
 	      {% endif %}
 	    </span>
 	  </span>
@@ -28,11 +38,18 @@
 	<td colspan="2"></td>
 	<td class="subtext">
 	  <span class="subline">
-            <span class="score" id="score_34397436">{{ post['points'] or 0 }} points</span>
+            <span class="score" id="score_34397436">
+	      {{ post['points'] or 0 }} points
+	    </span>
 	    by
-	    <a href="{{ url_for('hnpost.user',id=post['username']) }}" class="hnuser">{{ post['username'] }}</a>
+	    <a href="{{ url_for('hnpost.user',id=post['username']) }}"
+	       class="hnuser">
+	      {{ post['username'] }}
+	    </a>
 	    <span class="age" title="2023-01-16T06:14:31">
-	      <a href="item?id=34397436">{{ dtformatter(post['created']) }}</a>
+	      <a href="item?id=34397436">
+		{{ dtformatter(post['created']) }}
+	      </a>
 	    </span>
 	    <span id="unv_34397436"></span>
 	    |
@@ -51,28 +68,6 @@
 	<td colspan="2"></td>
 	<td>
 	  {% include "post/reply.html" %}
-	  <!--
-	  <form action="{{ url_for('hnpost.add_comment', id=post['id']) }}" method="post">
-	    <input type="hidden" name="parent" value="{{ post['id'] }}">
-	    <input type="hidden" name="goto" value="item?id=34397436">
-	    <input type="hidden" name="hmac" value="95088f25886b0a2dd580a34ca87ea2f3cd85140c">
-	    <textarea name="text" rows="8" cols="80" wrap="virtual"></textarea>
-
-	    <br><br>
-	    If you haven't already, would you mind reading about HN's
-	    <a href="newswelcome.html">
-	      <u>approach to comments</u>
-	    </a>
-	    and
-	    <a href="newsguidelines.html#comments">
-	      <u>site guidelines</u>
-	    </a>
-	    ?
-	    <br>
-	    <br>
-	    <input type="submit" value="add comment">
-	  </form>
--->
 	</td>
       </tr>
     </tbody>
@@ -81,47 +76,10 @@
   <br>
   <table class="comment-tree" border="0">
     {% for comment in comments %}
-    <tr>
-    <td class="ind" indent="0"><img src="s.gif" width="0" height="1"></td>
-<td class="votelinks" valign="top">
-    <center>
-        <a id="up_34391449" class="clicky" href="vote?id=34391449&amp;how=up&amp;auth=8a1605320cf1e540b90a720eb31761e25f51ba2e&amp;goto=item%3Fid%3D34390585#34391449">
-            <div class="votearrow" title="upvote"></div>
-        </a>
-    </center>
-</td>
-<td class="default">
-  <div style="margin-top:2px; margin-bottom:-10px;">
-    <span class="comhead">
-      <a href="{{ url_for('hnpost.user',id=comment['username']) }}" class="hnuser">{{ comment.username }}</a>
-      <span class="age" title="2023-01-15T18:04:02">
-	<a href="item?id=34391449">{{ dtformatter(comment.created) }}</a>
-      </span>
-      <span id="unv_34391449"></span>
-      <span class="navs">
-        |
-	<a href="#34397871" class="clicky" aria-hidden="true">next</a>
-	<a class="togg clicky" id="34391449" n="12" href="javascript:void(0)">[–]</a>
-	<span class="onstory"></span>
-      </span>
-    </span>
-    </div><br>
-    <div class="comment">
-      <span class="commtext c00">
-	{{ comment.body }}
-	<div class="reply">
-          <p>
-	    <font size="1">
-	      <!-- reply?id=34423662&goto=item%3Fid%3D34414716%2334423662 http://localhost:5000/reply/?id=1&item=4 -->
-              <u><a href="{{ url_for('hnpost.reply',id=comment['id'], item=post['id']) }}">reply</a></u>
-            </font>
-	  </p>
-	</div>
-      </span>
-    </div>
-</td>  
-    </tr>
+    {% with comment = comment %}
+    {% include "post/comment_body.html" %}
+    {% endwith %}
     {% endfor %}
   </table>
-
+  
 {% endblock %}

@@ -15,11 +15,14 @@ bp = Blueprint('hnpost', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points, p.created, p.comment_count, u.username'
+        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points,'
+        ' p.created, p.comment_count, u.username'
         ' FROM post p JOIN huser u ON p.user_id = u.id'
         ' ORDER BY p.points DESC'
     ).fetchall()
-    return render_template('post/index.html', posts=posts, urlparse=urlparse)
+    return render_template('post/index.html',
+                           posts=posts,
+                           urlparse=urlparse)
 
 
 def format_date(datestr):
@@ -34,21 +37,27 @@ def user():
         username = request.args.get('id', '')
         db = get_db()
         user = db.execute(
-            'SELECT id, username, email, created_at, about, karma from huser where username = ?',
+            'SELECT id, username, email, created_at, about, karma'
+            ' from huser where username = ?',
             (username,)
         ).fetchone()
-        return render_template('user/profile.html', huser = user, dateformatter=format_date)
+        return render_template('user/profile.html',
+                               huser = user,
+                               dateformatter=format_date)
 
 
 @bp.route('/new', methods=['GET'])
 def new():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points, p.created, u.username'
+        'SELECT p.id, p.user_id, p.title, p.url, p.body, p.points,'
+        ' p.created, u.username'
         ' FROM post p JOIN huser u ON p.user_id = u.id'
         ' ORDER BY p.created DESC'
     ).fetchall()
-    return render_template('post/new.html', posts=posts,urlparse=urlparse)
+    return render_template('post/new.html',
+                           posts=posts,
+                           urlparse=urlparse)
 
 
 @bp.route('/vote/<int:id>', methods=['GET'])
@@ -137,9 +146,10 @@ def update(id):
 
 def get_comments(post_id):
     comments = get_db().execute(
-        'SELECT id, body, created, points, post_id, parent_id, user_id, username'
+        'SELECT id, body, created, points, post_id, parent_id,'
+        ' user_id, username'
         ' FROM comment c'
-        ' WHERE c.post_id = ?',
+        ' WHERE c.parent_id = ?',
         (post_id,)
     ).fetchall()
 
@@ -161,7 +171,19 @@ def show_nice_duration(d_time):
         return f"{delta.seconds} second ago"
 
     return d_time
-    
+
+
+def get_comment_children(comment_id):
+    children = get_db().execute(
+         'SELECT id, body, created, points, post_id, parent_id,'
+        ' user_id, username'
+        ' FROM comment c'
+        ' WHERE c.parent_id = ?',
+        (int(comment_id),)
+    ).fetchall()
+    return children
+
+
 @bp.route("/item/<int:id>", methods=('GET',))
 def get_item(id):
     post = get_post(id, check_author=False)
@@ -170,12 +192,14 @@ def get_item(id):
                            post=post,
                            comments=comments,
                            urlparse=urlparse,
-                           dtformatter=show_nice_duration)
+                           dtformatter=show_nice_duration,
+                           get_comment_children=get_comment_children)
 
 
 def get_comment(comment_id):
     comment = get_db().execute(
-        'SELECT id, body, created, points, post_id, parent_id, user_id, username'
+        'SELECT id, body, created, points, post_id, parent_id,'
+        ' user_id, username'
         ' FROM comment c'
         ' WHERE c.id = ?',
         (int(comment_id),)
@@ -185,6 +209,7 @@ def get_comment(comment_id):
 
 
 @bp.route("/reply", methods=('GET',))
+@login_required
 def reply():
     if request.method == 'GET':
         post_id = request.args.get('item', '')
@@ -198,21 +223,21 @@ def reply():
                            dtformatter=show_nice_duration)
 
 
-@bp.route("/comment/<int:id>", methods=('POST',))
+@bp.route("/comment", methods=('POST',))
 @login_required
-def add_comment(id):
+def add_comment():
     if request.method == 'POST':
         text = request.form['text']
+        post_id = request.form['post_id']
         parent = request.form['parent']
         error = None
-        print(type(id))
         
         if not text:
             error = 'Comment is required.'
 
-        if not parent:
+        if not post_id:
             error = 'Post ID is required.'
-
+        
         if error is not None:
             flash(error)
         else:
@@ -220,18 +245,21 @@ def add_comment(id):
             db.execute('INSERT INTO comment '
                        '(body, post_id, parent_id, user_id, username) '
                        'VALUES (?, ?, ?, ?, ?) ',
-                       (text, id, int(parent), int(g.user['id']), g.user['username'])
+                       (text, int(post_id), int(parent), int(g.user['id']),
+                        g.user['username'])
             )
-            db.execute('UPDATE post SET comment_count = comment_count + 1'
+            db.execute('UPDATE post'
+                       ' SET comment_count = comment_count + 1'
                        ' WHERE id = ?',
-                       (id,)
+                       (int(post_id),)
             )
             db.commit()
             
-            return redirect(url_for('hnpost.get_item',id=parent))
+            return redirect(url_for('hnpost.get_item',id=post_id))
 
     post = get_post(id, check_author=False)    
-    return render_template('post/comment.html', post=post, urlparse=urlparse)
+    return render_template('post/comment.html', post=post,
+                           urlparse=urlparse)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
